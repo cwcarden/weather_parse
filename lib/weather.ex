@@ -1,22 +1,45 @@
 defmodule Weather do
-  def get_local do
+
+  @doc """
+  Fetches current weather data and checks probability of rain and rainIntensity.
+  """
+  def get_current do
+    longitude = "35.2091"
+    lattitude = "-101.8890"
     api_key = ""
-    app_key = ""
-    data = Map.fetch(List.first(Poison.decode!(HTTPoison.get!("https://api.ambientweather.net/v1/devices?applicationKey=#{app_key}&apiKey=#{api_key}").body)), "lastData")
-    data = elem(data, 1)
-    last_rain = Map.fetch(data, "lastRain")
-    is_raining = Map.fetch(data, "eventrainin")
-    current_temp = Map.fetch(data, "tempf")
-    local_data = {last_rain, is_raining, current_temp}
+    url = "https://api.darksky.net/forecast/#{api_key}/#{longitude},#{lattitude}?exclude=minutely,current,daily,flags"
+    data = Poison.decode!(HTTPoison.get!(url).body)
+    data["currently"]
+    #Map.fetch(data, "currently")
   end
 
+@doc """
+Fetches weather data at 6 hours and 10 hours in future.
+For sprinkler activation, boolean is used for "probability of rain in api"
+"""
 def get_forecast do
   longitude = "35.2091"
   lattitude = "-101.8890"
   api_key = ""
-  url = "https://api.darksky.net/forecast/#{api_key}/#{longitude},#{lattitude}?exclude=minutely,current,daily,flags"
+  url = "https://api.darksky.net/forecast/#{api_key}/#{longitude},#{lattitude}"
   data = Poison.decode!(HTTPoison.get!(url).body)
-  Map.fetch(data, "currently")
-  end
+  six_hr_forecast = Enum.at(data["hourly"]["data"], 7)
+  ten_hr_forecast = Enum.at(data["hourly"]["data"], 11)
+end
+
+
+@doc """
+Fetches weather data based on 12 hours prior to current unix time.
+"""
+def get_history do
+  longitude = "35.2091"
+  lattitude = "-101.8890"
+  api_key = ""
+  current_time = DateTime.to_unix(DateTime.utc_now)
+  twelve_hist_time = current_time - (div((24*60*60), 2))
+  url = "https://api.darksky.net/forecast/#{api_key}/#{longitude},#{lattitude},#{hist_time}?exclude=current,flags"
+  data = Poison.decode!(HTTPoison.get!(url).body)
+  data["currently"]
+end
 
 end
