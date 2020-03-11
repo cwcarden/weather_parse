@@ -3,7 +3,8 @@ defmodule Weather do
   @doc """
   Fetches current weather data and checks probability of rain and rainIntensity.
   """
-  def get_current do
+
+  def get_current() do
     longitude = "35.2091"
     lattitude = "-101.8890"
     api_key = ""
@@ -17,7 +18,7 @@ defmodule Weather do
 Fetches weather data at 6 hours and 10 hours in future.
 For sprinkler activation, boolean is used for "probability of rain in api"
 """
-def get_forecast do
+def get_forecast() do
   longitude = "35.2091"
   lattitude = "-101.8890"
   api_key = ""
@@ -31,12 +32,12 @@ end
 @doc """
 Fetches weather data based on 12 hours prior to current unix time.
 """
-def get_history do
+def get_history() do
   longitude = "35.2091"
   lattitude = "-101.8890"
   api_key = ""
   current_time = DateTime.to_unix(DateTime.utc_now)
-  twelve_hist_time = current_time - (div((24*60*60), 2))
+  hist_time = current_time - (div((24*60*60), 2))
   url = "https://api.darksky.net/forecast/#{api_key}/#{longitude},#{lattitude},#{hist_time}?exclude=current,flags"
   data = Poison.decode!(HTTPoison.get!(url).body)
   data["currently"]
