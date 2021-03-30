@@ -8,7 +8,8 @@ defmodule Weather do
     longitude = "35.2091"
     lattitude = "-101.8890"
     api_key = ""
-    url = "https://api.darksky.net/forecast/#{api_key}/#{longitude},#{lattitude}?exclude=minutely,current,daily,flags"
+    url = "https://api.darksky.net/forecast/#{api_key}/#{longitude},#{lattitude}
+    ?exclude=minutely,current,daily,flags"
     data = Poison.decode!(HTTPoison.get!(url).body)
     data["currently"]
     #Map.fetch(data, "currently")
