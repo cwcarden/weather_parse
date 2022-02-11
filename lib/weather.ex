@@ -1,7 +1,7 @@
 defmodule Weather do
 
   @doc """
-  Fetches current weather data and checks probability of rain and rainIntensity.
+  Fetches current weather data and checks probability of rain and rain intensity.
   """
 
   def get_current() do
